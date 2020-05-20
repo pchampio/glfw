@@ -18,10 +18,12 @@ jobs:
          git submodule update --recursive --remote
          # Sync v3.3 golang code to dev golang code
          find v3.3 -type f ! -wholename "*/glfw/glfw/*" -exec cp -v -t dev/glfw {} +
+         sed -i 's/v3.3/dev/g' dev/glfw/go.mod # change the module name to dev
+         git submodule status dev/glfw/glfw | awk '{print $1}' > dev/glfw/GLFW_C_REVISION.txt # update the revision id
          # Commit changes
          git status
          git add .
-         git commit -m "Automatic update of GLFW submodule" || echo "Nothing to commit"
+         git commit -m "Automatic update of dev module" || echo "Nothing to commit"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
