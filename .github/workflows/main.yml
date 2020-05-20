@@ -1,0 +1,15 @@
+name: Update C GLFW submodule
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  sync:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout submodules
+        uses: srt32/git-actions@v0.0.3
+        with:
+          args: git submodule update --remote
