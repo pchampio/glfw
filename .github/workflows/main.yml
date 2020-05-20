@@ -2,7 +2,7 @@ name: Update C GLFW submodule
 
 on:
   schedule:
-    - cron: '*/01 * * * *'
+    - cron: '*/30 * * * *'
 
 jobs:
   sync:
