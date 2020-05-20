@@ -2,30 +2,28 @@ name: Update C GLFW submodule
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/01 * * * *'
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Checkout submodules
-      uses: srt32/git-actions@v0.0.3
-      with:
-        args: git submodule update --init --recursive
-    - name: Update submodules
-      uses: srt32/git-actions@v0.0.3
-      with:
-        args: git submodule update --recursive --remote
-    - name: Commit changes
+    - name: Update submodules & sync code
       run: |
          git config --local user.email "action@github.com"
          git config --local user.name "GitHub Action"
+         # updates GLFW submodule
+         git submodule update --init --recursive
+         git submodule update --recursive --remote
+         # Sync v3.3 golang code to dev golang code
+         find v3.3 -type f ! -wholename "*/glfw/glfw/*" -exec cp -v -t dev/glfw {} +
+         # Commit changes
          git status
          git add .
          git commit -m "Automatic update of GLFW submodule" || echo "Nothing to commit"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        repository: pchampio/glfw
+        repository: ${{ github.repository }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
